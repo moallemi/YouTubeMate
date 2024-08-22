@@ -6,6 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okio.Path.Companion.toPath
 
 class DependencyProvider {
@@ -22,6 +25,8 @@ class DependencyProvider {
       GsonFactory(),
     ) { }.setApplicationName(APPLICATION_NAME)
       .build()
+
+  fun providesAppScope(): CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
   companion object {
     private const val DATASTORE_FILE_NAME = "youtubemate.preferences_pb"
