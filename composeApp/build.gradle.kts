@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.kotlinMultiplatform)
   alias(libs.plugins.jetbrainsCompose)
   alias(libs.plugins.compose.compiler)
+  id("kotlinx-serialization")
 }
 
 kotlin {
@@ -23,6 +24,7 @@ kotlin {
       implementation(libs.androidx.lifecycle.runtime.compose)
 
       implementation(libs.androidx.datastore.preferences.core)
+      implementation(libs.kotlinx.serialization.json)
 
       implementation(libs.google.api.client)
       implementation(libs.google.api.services.youtube)
