@@ -3,6 +3,9 @@ package me.moallemi.youtubemate.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.youtube.YouTube
 import okio.Path.Companion.toPath
 
 class DependencyProvider {
@@ -13,7 +16,15 @@ class DependencyProvider {
       produceFile = { DATASTORE_FILE_NAME.toPath() },
     )
 
+  fun providesYouTube(): YouTube =
+    YouTube.Builder(
+      GoogleNetHttpTransport.newTrustedTransport(),
+      GsonFactory(),
+    ) { }.setApplicationName(APPLICATION_NAME)
+      .build()
+
   companion object {
     private const val DATASTORE_FILE_NAME = "youtubemate.preferences_pb"
+    private const val APPLICATION_NAME = "YoutubeMate"
   }
 }

@@ -23,6 +23,9 @@ kotlin {
       implementation(libs.androidx.lifecycle.runtime.compose)
 
       implementation(libs.androidx.datastore.preferences.core)
+
+      implementation(libs.google.api.client)
+      implementation(libs.google.api.services.youtube)
     }
     desktopMain.dependencies {
       implementation(compose.desktop.currentOs)
