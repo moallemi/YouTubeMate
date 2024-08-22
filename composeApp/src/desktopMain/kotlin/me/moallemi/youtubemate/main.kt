@@ -3,11 +3,12 @@ package me.moallemi.youtubemate
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
-fun main() = application {
+fun main() =
+  application {
     Window(
-        onCloseRequest = ::exitApplication,
-        title = "YoutubeMate",
+      onCloseRequest = ::exitApplication,
+      title = "YoutubeMate",
     ) {
-        App()
+      App()
     }
-}
+  }
