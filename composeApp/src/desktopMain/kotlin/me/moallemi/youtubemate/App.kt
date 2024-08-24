@@ -1,10 +1,13 @@
 package me.moallemi.youtubemate
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,7 +34,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-  MaterialTheme {
+  AppTheme {
     val dependencyContainer = remember { DependencyContainer(DependencyProvider()) }
 
     val youtubeApiKey by dependencyContainer.dataRepository.observeYouTubeCredential().collectAsState(null)
@@ -121,6 +124,17 @@ fun App() {
           }
         }
       }
+    }
+  }
+}
+
+@Composable
+fun AppTheme(content: @Composable () -> Unit) {
+  MaterialTheme(
+    colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else MaterialTheme.colorScheme,
+  ) {
+    Surface {
+      content()
     }
   }
 }
