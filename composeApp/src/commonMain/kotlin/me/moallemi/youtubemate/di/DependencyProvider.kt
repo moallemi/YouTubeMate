@@ -36,7 +36,8 @@ class DependencyProvider {
     ) { }.setApplicationName(APPLICATION_NAME)
       .build()
 
-  fun providesAppScope(): CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+  fun providesAppScope(): CoroutineScope =
+    CoroutineScope(Dispatchers.Default + SupervisorJob())
 
   fun providesJson(): Json {
     val module =

@@ -16,26 +16,24 @@ class YouTubeRemoteSourceImpl(
   ): Result<Channel, GeneralError> =
     suspendCancellableCoroutine { continuation ->
       try {
-        val channel =
-          youTube.channels()
-            .list(listOf("snippet", "statistics"))
-            .apply {
-              this.id = listOf(channelId)
-              key = youTubeCredential.apiKey
-            }
-            .execute()?.items?.get(0)!!.let { youtubeChannel ->
-            Channel(
-              id = youtubeChannel.id,
-              title = youtubeChannel.snippet.title,
-              handle = youtubeChannel.snippet.customUrl,
-              thumbnail = youtubeChannel.snippet.thumbnails.medium.url,
-              stats =
-                Stats(
-                  videoCount = youtubeChannel.statistics.videoCount,
-                  subscriberCount = youtubeChannel.statistics.subscriberCount,
-                ),
-            )
+        val channel = youTube.channels()
+          .list(listOf("snippet", "statistics"))
+          .apply {
+            this.id = listOf(channelId)
+            key = youTubeCredential.apiKey
           }
+          .execute()?.items?.get(0)!!.let { youtubeChannel ->
+          Channel(
+            id = youtubeChannel.id,
+            title = youtubeChannel.snippet.title,
+            handle = youtubeChannel.snippet.customUrl,
+            thumbnail = youtubeChannel.snippet.thumbnails.medium.url,
+            stats = Stats(
+              videoCount = youtubeChannel.statistics.videoCount,
+              subscriberCount = youtubeChannel.statistics.subscriberCount,
+            ),
+          )
+        }
         continuation.resume(Result.Success(channel))
       } catch (e: Exception) {
         continuation.resume(Result.Failure(GeneralError.ApiError(e.message, -1)))

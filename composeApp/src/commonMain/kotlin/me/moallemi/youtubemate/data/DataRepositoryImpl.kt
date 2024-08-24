@@ -14,9 +14,8 @@ class DataRepositoryImpl(
   private val appScope: CoroutineScope,
 ) : DataRepository {
   override suspend fun channel(channelId: String): Result<Channel, GeneralError> {
-    val youTubeCredential =
-      localStore.observeYouTubeCredential().first()
-        ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
+    val youTubeCredential = localStore.observeYouTubeCredential().first()
+      ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
     val result = youTubeRemoteSource.channel(channelId, youTubeCredential)
     if (result is Success) {
       localStore.storeChannel(result.data)
@@ -24,9 +23,11 @@ class DataRepositoryImpl(
     return result
   }
 
-  override fun observeChannel(): Flow<Channel?> = localStore.observeChannel()
+  override fun observeChannel(): Flow<Channel?> =
+    localStore.observeChannel()
 
-  override fun observeYouTubeCredential(): Flow<YouTubeCredential?> = localStore.observeYouTubeCredential()
+  override fun observeYouTubeCredential(): Flow<YouTubeCredential?> =
+    localStore.observeYouTubeCredential()
 
   override fun storeYouTubeCredential(credential: YouTubeCredential) {
     appScope.launch {

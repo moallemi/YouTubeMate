@@ -23,4 +23,5 @@ class GeneralErrorThrowable(
       }
 }
 
-fun GeneralError.toThrowable() = GeneralErrorThrowable(this)
+fun GeneralError.toThrowable() =
+  GeneralErrorThrowable(this)
