@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import me.moallemi.youtubemate.data.Result.Success
 import me.moallemi.youtubemate.model.Channel
+import me.moallemi.youtubemate.model.Video
 import me.moallemi.youtubemate.model.YouTubeCredential
 
 class DataRepositoryImpl(
@@ -33,5 +34,19 @@ class DataRepositoryImpl(
     appScope.launch {
       localStore.storeYouTubeCredential(credential)
     }
+  }
+
+  override fun observeVideos(): Flow<List<Video>> =
+    localStore.observeVideos()
+
+  override suspend fun allVideos(channelId: String): Result<List<Video>, GeneralError> {
+    val youTubeCredential = localStore.observeYouTubeCredential().first()
+      ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
+
+    val result = youTubeRemoteSource.allVideos(channelId, youTubeCredential)
+    if (result is Success) {
+      localStore.storeVideos(result.data)
+    }
+    return result
   }
 }

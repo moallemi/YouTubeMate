@@ -1,6 +1,7 @@
 package me.moallemi.youtubemate.data
 
 import me.moallemi.youtubemate.model.Channel
+import me.moallemi.youtubemate.model.Video
 import me.moallemi.youtubemate.model.YouTubeCredential
 
 interface YouTubeRemoteSource {
@@ -8,4 +9,9 @@ interface YouTubeRemoteSource {
     channelId: String,
     youTubeCredential: YouTubeCredential,
   ): Result<Channel, GeneralError>
+
+  suspend fun allVideos(
+    channelId: String,
+    youTubeCredential: YouTubeCredential,
+  ): Result<List<Video>, GeneralError>
 }
