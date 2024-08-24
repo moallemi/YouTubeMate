@@ -17,3 +17,11 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 *.preferences_pb
+
+
+# Keep the code styles.
+!/.idea/codeStyles
+/.idea/codeStyles/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+!/.idea/kotlinc.xml
