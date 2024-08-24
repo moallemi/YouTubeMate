@@ -17,10 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.moallemi.youtubemate.data.Result
+import me.moallemi.youtubemate.data.Result.Failure
 import me.moallemi.youtubemate.di.DependencyContainer
 import me.moallemi.youtubemate.di.DependencyProvider
 import me.moallemi.youtubemate.feature.addchannel.AddYouTubeChannel
 import me.moallemi.youtubemate.feature.addyoutubecred.AddYouTubeCredential
+import me.moallemi.youtubemate.model.Channel
 import me.moallemi.youtubemate.model.YouTubeCredential
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -30,57 +32,78 @@ fun App() {
   MaterialTheme {
     val dependencyContainer = remember { DependencyContainer(DependencyProvider()) }
 
-    val scope = rememberCoroutineScope()
-
     val youtubeApiKey by dependencyContainer.dataRepository.observeYouTubeCredential().collectAsState(null)
     val channel by dependencyContainer.dataRepository.observeChannel().collectAsState(null)
 
     if (youtubeApiKey == null) {
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .wrapContentWidth(),
-        contentAlignment = Alignment.Center,
-      ) {
-        AddYouTubeCredential(
-          modifier = Modifier
-            .width(400.dp),
-          youTubeCredential = youtubeApiKey,
-          onSaveClick = { apiKey ->
-            dependencyContainer.dataRepository.storeYouTubeCredential(
-              YouTubeCredential(apiKey = apiKey),
-            )
-          },
-        )
-      }
+      YouTubeApiKey(
+        youtubeApiKey = youtubeApiKey,
+        dependencyContainer = dependencyContainer,
+      )
     }
     if (youtubeApiKey != null && channel == null) {
-      var isLoading by remember { mutableStateOf(false) }
-      var error by remember { mutableStateOf<String?>(null) }
-      Box(
-        modifier = Modifier
-          .fillMaxSize()
-          .wrapContentWidth(),
-        contentAlignment = Alignment.Center,
-      ) {
-        AddYouTubeChannel(
-          modifier = Modifier
-            .width(400.dp),
-          channel = channel,
-          error = error,
-          isLoading = isLoading,
-          onSaveClick = { channelId ->
-            scope.launch {
-              isLoading = true
-              val result = dependencyContainer.dataRepository.channel(channelId)
-              if (result is Result.Failure) {
-                error = "Invalid channel id"
-              }
-              isLoading = false
-            }
-          },
-        )
-      }
+      AddYouTubeChannel(
+        channel = channel,
+        dependencyContainer = dependencyContainer,
+      )
     }
+  }
+}
+
+@Composable
+private fun AddYouTubeChannel(
+  channel: Channel?,
+  dependencyContainer: DependencyContainer,
+) {
+  val scope = rememberCoroutineScope()
+  var isLoading by remember { mutableStateOf(false) }
+  var error by remember { mutableStateOf<String?>(null) }
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .wrapContentWidth(),
+    contentAlignment = Alignment.Center,
+  ) {
+    AddYouTubeChannel(
+      modifier = Modifier
+        .width(400.dp),
+      channel = channel,
+      error = error,
+      isLoading = isLoading,
+      onSaveClick = { channelId ->
+        scope.launch {
+          isLoading = true
+          val result = dependencyContainer.dataRepository.channel(channelId)
+          if (result is Failure) {
+            error = "Invalid channel id"
+          }
+          isLoading = false
+        }
+      },
+    )
+  }
+}
+
+@Composable
+private fun YouTubeApiKey(
+  youtubeApiKey: YouTubeCredential?,
+  dependencyContainer: DependencyContainer,
+) {
+  Box(
+    modifier = Modifier
+      .fillMaxSize()
+      .wrapContentWidth(),
+    contentAlignment = Alignment.Center,
+  ) {
+    AddYouTubeCredential(
+      modifier = Modifier
+        .width(400.dp),
+      youTubeCredential = youtubeApiKey,
+      onSaveClick = { apiKey ->
+        dependencyContainer.dataRepository.storeYouTubeCredential(
+          YouTubeCredential(apiKey = apiKey),
+        )
+      },
+    )
   }
 }
