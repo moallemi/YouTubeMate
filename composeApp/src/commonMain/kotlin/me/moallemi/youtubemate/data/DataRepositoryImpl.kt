@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import me.moallemi.youtubemate.data.Result.Success
 import me.moallemi.youtubemate.model.Channel
+import me.moallemi.youtubemate.model.Comment
 import me.moallemi.youtubemate.model.Video
 import me.moallemi.youtubemate.model.YouTubeCredential
 
@@ -46,6 +47,20 @@ class DataRepositoryImpl(
     val result = youTubeRemoteSource.allVideos(channelId, youTubeCredential)
     if (result is Success) {
       localStore.storeVideos(result.data)
+    }
+    return result
+  }
+
+  override fun observeComments(): Flow<List<Comment>> =
+    localStore.observeComments()
+
+  override suspend fun allComments(videoIds: List<String>): Result<List<Comment>, GeneralError> {
+    val youTubeCredential = localStore.observeYouTubeCredential().first()
+      ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
+
+    val result = youTubeRemoteSource.allComments(videoIds, youTubeCredential)
+    if (result is Success) {
+      localStore.storeComments(result.data)
     }
     return result
   }
