@@ -8,6 +8,7 @@ data-store = "1.1.1"
 google-api-client = "1.33.0"
 google-api-services-youtube = "v3-rev20240814-2.0.0"
 kotlinx-serialization = "1.7.1"
+coil = "3.0.0-alpha10"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -20,6 +21,9 @@ androidx-datastore-preferences-core = { group = "androidx.datastore", name = "da
 google-api-client = { group = "com.google.api-client", name = "google-api-client", version.ref = "google-api-client" }
 google-api-services-youtube = { group = "com.google.apis", name = "google-api-services-youtube", version.ref = "google-api-services-youtube" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx" , name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
+coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

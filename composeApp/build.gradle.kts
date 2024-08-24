@@ -27,6 +27,10 @@ kotlin {
       implementation(libs.androidx.datastore.preferences.core)
       implementation(libs.kotlinx.serialization.json)
 
+      implementation(libs.coil)
+      implementation(libs.coil.compose)
+      implementation(libs.coil.network.okhttp)
+
       implementation(libs.google.api.client)
       implementation(libs.google.api.services.youtube)
     }
