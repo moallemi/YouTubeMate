@@ -2,6 +2,7 @@ package me.moallemi.youtubemate
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import me.moallemi.youtubemate.compoentns.AddYouTubeChannelSection
 import me.moallemi.youtubemate.compoentns.ChannelSection
+import me.moallemi.youtubemate.compoentns.CommentsSection
 import me.moallemi.youtubemate.compoentns.TopCommentersSection
 import me.moallemi.youtubemate.compoentns.YouTubeApiKeySection
 import me.moallemi.youtubemate.data.Result.Failure
@@ -49,6 +51,13 @@ fun App() {
           ?.sortedByDescending { it.value.size }
           ?.associate { it.key to it.value }
           ?: emptyMap()
+      }
+    }
+    val topComments by remember {
+      derivedStateOf {
+        comments?.filter { comment ->
+          comment.author.name != "@RezaDevs" && comment.text.length > 30
+        }
       }
     }
 
@@ -85,7 +94,8 @@ fun App() {
       Column {
         ChannelSection(
           modifier = Modifier
-            .padding(16.dp),
+            .padding(top = 16.dp)
+            .padding(horizontal = 16.dp),
           channel = channel!!,
         )
         LaunchedEffect(Unit) {
@@ -108,19 +118,41 @@ fun App() {
             dependencyContainer.dataRepository.allComments(cachedVideos.map { it.id })
           }
         }
-        ElevatedCard(
-          modifier = Modifier
-            .padding(16.dp),
-        ) {
-          Column {
-            Text(
-              text = "Top Commenters",
-              style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.padding(16.dp),
-            )
-            TopCommentersSection(
-              topCommentAuthors = commentsByAuthor,
-            )
+        Row {
+          ElevatedCard(
+            modifier = Modifier
+              .padding(vertical = 16.dp)
+              .padding(start = 16.dp, end = 8.dp)
+              .weight(1f),
+          ) {
+            Column {
+              Text(
+                text = "Top Commenters",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp),
+              )
+              TopCommentersSection(
+                topCommentAuthors = commentsByAuthor,
+              )
+            }
+          }
+
+          ElevatedCard(
+            modifier = Modifier
+              .padding(vertical = 16.dp)
+              .padding(start = 8.dp, end = 16.dp)
+              .weight(1f),
+          ) {
+            Column {
+              Text(
+                text = "Top Comments",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp),
+              )
+              CommentsSection(
+                items = topComments ?: emptyList(),
+              )
+            }
           }
         }
       }

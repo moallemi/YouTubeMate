@@ -116,8 +116,10 @@ class YouTubeRemoteSourceImpl(
           val topLevelComment = commentThread.snippet.topLevelComment
           commentsList.add(
             Comment(
+              id = topLevelComment.id,
               text = topLevelComment.snippet.textDisplay,
               videoId = videoId,
+              date = topLevelComment.snippet.publishedAt.toStringRfc3339(),
               author = CommentAuthor(
                 name = topLevelComment.snippet.authorDisplayName,
                 avatarUrl = topLevelComment.snippet.authorProfileImageUrl,
@@ -130,8 +132,10 @@ class YouTubeRemoteSourceImpl(
             commentThread.replies.comments.forEach { comment ->
               commentsList.add(
                 Comment(
+                  id = comment.id,
                   text = comment.snippet.textDisplay,
                   videoId = videoId,
+                  date = comment.snippet.publishedAt.toStringRfc3339(),
                   author = CommentAuthor(
                     name = comment.snippet.authorDisplayName,
                     avatarUrl = comment.snippet.authorProfileImageUrl,
