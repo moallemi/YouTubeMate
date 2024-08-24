@@ -47,6 +47,9 @@ class DependencyProvider {
     return Json { serializersModule = module }
   }
 
+  fun providesDispatcher(): DispatcherProvider =
+    DefaultDispatcherProvider()
+
   companion object {
     private const val DATASTORE_FILE_NAME = "youtubemate.preferences_pb"
     private const val APPLICATION_NAME = "YoutubeMate"

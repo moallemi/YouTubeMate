@@ -17,6 +17,7 @@ class DependencyContainer(
         json = provider.providesJson(),
       ),
       appScope = provider.providesAppScope(),
+      dispatcher = provider.providesDispatcher(),
     )
   }
 }
