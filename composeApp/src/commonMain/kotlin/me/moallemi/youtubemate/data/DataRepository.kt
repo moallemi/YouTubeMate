@@ -5,7 +5,9 @@ import me.moallemi.youtubemate.model.Channel
 import me.moallemi.youtubemate.model.YouTubeCredential
 
 interface DataRepository {
-  suspend fun channel(): Result<Channel, GeneralError>
+  suspend fun channel(channelId: String): Result<Channel, GeneralError>
+
+  fun observeChannel(): Flow<Channel?>
 
   fun observeYouTubeCredential(): Flow<YouTubeCredential?>
 

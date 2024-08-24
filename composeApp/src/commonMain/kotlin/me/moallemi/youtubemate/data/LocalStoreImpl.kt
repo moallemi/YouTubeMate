@@ -8,16 +8,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.moallemi.youtubemate.model.Channel
 import me.moallemi.youtubemate.model.YouTubeCredential
 
 class LocalStoreImpl(
   private val dataStore: DataStore<Preferences>,
+  private val json: Json,
 ) : LocalStore {
   private val youtubeApiKeyPref = stringPreferencesKey("youtube_api_key")
+  private val youtubeChannelPref = stringPreferencesKey("youtube_channel")
 
   override suspend fun storeYouTubeCredential(credential: YouTubeCredential) {
     dataStore.edit { preferences ->
-      preferences[youtubeApiKeyPref] = Json.encodeToString(credential)
+      preferences[youtubeApiKeyPref] = json.encodeToString(credential)
     }
   }
 
@@ -25,6 +28,19 @@ class LocalStoreImpl(
     dataStore.data
       .map { preferences ->
         val jsonString = preferences[youtubeApiKeyPref] ?: return@map null
-        Json.decodeFromString(jsonString)
+        json.decodeFromString(jsonString)
+      }
+
+  override suspend fun storeChannel(channel: Channel) {
+    dataStore.edit { preferences ->
+      preferences[youtubeChannelPref] = json.encodeToString(channel)
+    }
+  }
+
+  override fun observeChannel(): Flow<Channel?> =
+    dataStore.data
+      .map { preferences ->
+        val jsonString = preferences[youtubeChannelPref] ?: return@map null
+        json.decodeFromString(jsonString)
       }
 }

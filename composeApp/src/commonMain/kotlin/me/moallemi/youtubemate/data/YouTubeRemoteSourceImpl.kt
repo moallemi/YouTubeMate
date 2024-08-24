@@ -4,12 +4,16 @@ import com.google.api.services.youtube.YouTube
 import kotlinx.coroutines.suspendCancellableCoroutine
 import me.moallemi.youtubemate.model.Channel
 import me.moallemi.youtubemate.model.Stats
+import me.moallemi.youtubemate.model.YouTubeCredential
 import kotlin.coroutines.resume
 
 class YouTubeRemoteSourceImpl(
   private val youTube: YouTube,
 ) : YouTubeRemoteSource {
-  override suspend fun channel(channelId: String): Result<Channel, GeneralError> =
+  override suspend fun channel(
+    channelId: String,
+    youTubeCredential: YouTubeCredential,
+  ): Result<Channel, GeneralError> =
     suspendCancellableCoroutine { continuation ->
       try {
         val channel =
@@ -17,7 +21,7 @@ class YouTubeRemoteSourceImpl(
             .list(listOf("snippet", "statistics"))
             .apply {
               this.id = listOf(channelId)
-              key = ""
+              key = youTubeCredential.apiKey
             }
             .execute()?.items?.get(0)!!.let { youtubeChannel ->
             Channel(

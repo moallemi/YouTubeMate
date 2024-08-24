@@ -1,7 +1,10 @@
 package me.moallemi.youtubemate.model
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.math.BigInteger
 
+@Serializable
 data class Channel(
   val id: String,
   val title: String,
@@ -10,7 +13,8 @@ data class Channel(
   val thumbnail: String,
 )
 
+@Serializable
 data class Stats(
-  val videoCount: BigInteger,
-  val subscriberCount: BigInteger,
+  @Contextual val videoCount: BigInteger,
+  @Contextual val subscriberCount: BigInteger,
 )

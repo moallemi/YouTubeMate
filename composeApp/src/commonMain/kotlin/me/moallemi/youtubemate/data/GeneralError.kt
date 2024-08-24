@@ -5,6 +5,8 @@ sealed class GeneralError {
 
   data object NetworkError : GeneralError()
 
+  data class AppError(val message: String) : GeneralError()
+
   data class UnknownError(val error: Throwable) : GeneralError()
 }
 
@@ -17,6 +19,7 @@ class GeneralErrorThrowable(
         is GeneralError.ApiError -> generalError.message ?: "Unknown API error"
         is GeneralError.NetworkError -> "Network error"
         is GeneralError.UnknownError -> generalError.error.message ?: "Unknown error"
+        is GeneralError.AppError -> generalError.message
       }
 }
 
