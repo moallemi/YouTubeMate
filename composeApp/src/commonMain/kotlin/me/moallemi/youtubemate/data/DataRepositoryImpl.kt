@@ -32,6 +32,12 @@ class DataRepositoryImpl(
   override fun observeChannel(): Flow<Channel?> =
     localStore.observeChannel()
 
+  override suspend fun deleteChannel(id: String) {
+    withContext(dispatcher.io()) {
+      localStore.deleteChannel()
+    }
+  }
+
   override fun observeYouTubeCredential(): Flow<YouTubeCredential?> =
     localStore.observeYouTubeCredential()
 
@@ -55,6 +61,12 @@ class DataRepositoryImpl(
     return result
   }
 
+  override suspend fun deleteAllVideos() {
+    withContext(dispatcher.io()) {
+      localStore.deleteAllVideos()
+    }
+  }
+
   override fun observeComments(): Flow<List<Comment>> =
     localStore.observeComments()
 
@@ -67,5 +79,11 @@ class DataRepositoryImpl(
       localStore.storeComments(result.data)
     }
     return result
+  }
+
+  override suspend fun deleteAllComments() {
+    withContext(dispatcher.io()) {
+      localStore.deleteAllComments()
+    }
   }
 }

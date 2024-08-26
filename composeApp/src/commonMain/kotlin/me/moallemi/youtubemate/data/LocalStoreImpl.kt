@@ -48,6 +48,12 @@ class LocalStoreImpl(
         json.decodeFromString(jsonString)
       }
 
+  override suspend fun deleteChannel() {
+    dataStore.edit { preferences ->
+      preferences.remove(youtubeChannelPref)
+    }
+  }
+
   override suspend fun storeVideos(videos: List<Video>) {
     dataStore.edit { preferences ->
       preferences[youtubeVideosPref] = json.encodeToString(videos)
@@ -61,6 +67,12 @@ class LocalStoreImpl(
         json.decodeFromString(jsonString)
       }
 
+  override suspend fun deleteAllVideos() {
+    dataStore.edit { preferences ->
+      preferences.remove(youtubeVideosPref)
+    }
+  }
+
   override suspend fun storeComments(comments: List<Comment>) {
     dataStore.edit { preferences ->
       preferences[youtubeCommentsPref] = json.encodeToString(comments)
@@ -73,4 +85,10 @@ class LocalStoreImpl(
         val jsonString = preferences[youtubeCommentsPref] ?: "[]"
         json.decodeFromString(jsonString)
       }
+
+  override suspend fun deleteAllComments() {
+    dataStore.edit { preferences ->
+      preferences.remove(youtubeCommentsPref)
+    }
+  }
 }

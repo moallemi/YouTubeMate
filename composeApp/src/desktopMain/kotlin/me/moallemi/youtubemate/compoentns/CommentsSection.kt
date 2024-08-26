@@ -39,7 +39,6 @@ fun CommentsSection(
     ) { comment ->
       Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
       ) {
         AsyncImage(
           model = ImageRequest.Builder(LocalPlatformContext.current)
@@ -52,7 +51,9 @@ fun CommentsSection(
             .clip(CircleShape),
         )
 
-        Column {
+        Column(
+          verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
           Row(
             verticalAlignment = Alignment.CenterVertically,
           ) {

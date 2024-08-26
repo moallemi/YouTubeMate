@@ -1,14 +1,15 @@
 package me.moallemi.youtubemate
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -31,6 +33,7 @@ import me.moallemi.youtubemate.di.DependencyContainer
 import me.moallemi.youtubemate.di.DependencyProvider
 import me.moallemi.youtubemate.model.Video
 import me.moallemi.youtubemate.model.YouTubeCredential
+import me.moallemi.youtubemate.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -90,14 +93,40 @@ fun App() {
         },
       )
     }
+
     if (youtubeApiKey != null && channel != null) {
+      val coroutineScope = rememberCoroutineScope()
       Column {
-        ChannelSection(
+        Row(
           modifier = Modifier
             .padding(top = 16.dp)
             .padding(horizontal = 16.dp),
-          channel = channel!!,
-        )
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          ChannelSection(
+            modifier = Modifier
+              .weight(1f),
+            channel = channel!!,
+          )
+
+          Button(
+            onClick = {
+              // TODO: Add navigation instead of manual deletion
+              coroutineScope.launch {
+                dependencyContainer.dataRepository.deleteChannel(channel!!.id)
+                dependencyContainer.dataRepository.deleteAllVideos()
+                dependencyContainer.dataRepository.deleteAllComments()
+              }
+            },
+          ) {
+            Icon(
+              modifier = Modifier.padding(end = 8.dp),
+              imageVector = Icons.Rounded.Settings,
+              contentDescription = "Refresh",
+            )
+            Text(text = "Change Channel")
+          }
+        }
         LaunchedEffect(Unit) {
           val cachedVideos: List<Video>
           if (videos?.isEmpty() == true) {
@@ -156,17 +185,6 @@ fun App() {
           }
         }
       }
-    }
-  }
-}
-
-@Composable
-fun AppTheme(content: @Composable () -> Unit) {
-  MaterialTheme(
-    colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else MaterialTheme.colorScheme,
-  ) {
-    Surface {
-      content()
     }
   }
 }

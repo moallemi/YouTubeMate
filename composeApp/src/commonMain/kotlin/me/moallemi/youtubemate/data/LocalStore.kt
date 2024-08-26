@@ -15,11 +15,17 @@ interface LocalStore {
 
   fun observeChannel(): Flow<Channel?>
 
+  suspend fun deleteChannel()
+
   suspend fun storeVideos(videos: List<Video>)
 
   fun observeVideos(): Flow<List<Video>>
 
+  suspend fun deleteAllVideos()
+
   suspend fun storeComments(comments: List<Comment>)
 
   fun observeComments(): Flow<List<Comment>>
+
+  suspend fun deleteAllComments()
 }

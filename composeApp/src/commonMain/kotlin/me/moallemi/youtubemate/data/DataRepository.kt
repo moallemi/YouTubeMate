@@ -11,6 +11,8 @@ interface DataRepository {
 
   fun observeChannel(): Flow<Channel?>
 
+  suspend fun deleteChannel(id: String)
+
   fun observeYouTubeCredential(): Flow<YouTubeCredential?>
 
   fun storeYouTubeCredential(credential: YouTubeCredential)
@@ -19,7 +21,11 @@ interface DataRepository {
 
   suspend fun allVideos(channelId: String): Result<List<Video>, GeneralError>
 
+  suspend fun deleteAllVideos()
+
   fun observeComments(): Flow<List<Comment>>
 
   suspend fun allComments(videoIds: List<String>): Result<List<Comment>, GeneralError>
+
+  suspend fun deleteAllComments()
 }
