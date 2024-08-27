@@ -50,16 +50,17 @@ class DataRepositoryImpl(
   override fun observeVideos(): Flow<List<Video>> =
     localStore.observeVideos()
 
-  override suspend fun allVideos(channelId: String): Result<List<Video>, GeneralError> {
-    val youTubeCredential = localStore.observeYouTubeCredential().first()
-      ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
+  override suspend fun allVideos(channelId: String): Result<List<Video>, GeneralError> =
+    withContext(dispatcher.io()) {
+      val youTubeCredential = localStore.observeYouTubeCredential().first()
+        ?: return@withContext Result.Failure(GeneralError.AppError("No YouTube Credential"))
 
-    val result = youTubeRemoteSource.allVideos(channelId, youTubeCredential)
-    if (result is Success) {
-      localStore.storeVideos(result.data)
+      val result = youTubeRemoteSource.allVideos(channelId, youTubeCredential)
+      if (result is Success) {
+        localStore.storeVideos(result.data)
+      }
+      result
     }
-    return result
-  }
 
   override suspend fun deleteAllVideos() {
     withContext(dispatcher.io()) {
@@ -70,16 +71,17 @@ class DataRepositoryImpl(
   override fun observeComments(): Flow<List<Comment>> =
     localStore.observeComments()
 
-  override suspend fun allComments(videoIds: List<String>): Result<List<Comment>, GeneralError> {
-    val youTubeCredential = localStore.observeYouTubeCredential().first()
-      ?: return Result.Failure(GeneralError.AppError("No YouTube Credential"))
+  override suspend fun allComments(videoIds: List<String>): Result<List<Comment>, GeneralError> =
+    withContext(dispatcher.io()) {
+      val youTubeCredential = localStore.observeYouTubeCredential().first()
+        ?: return@withContext Result.Failure(GeneralError.AppError("No YouTube Credential"))
 
-    val result = youTubeRemoteSource.allComments(videoIds, youTubeCredential)
-    if (result is Success) {
-      localStore.storeComments(result.data)
+      val result = youTubeRemoteSource.allComments(videoIds, youTubeCredential)
+      if (result is Success) {
+        localStore.storeComments(result.data)
+      }
+      result
     }
-    return result
-  }
 
   override suspend fun deleteAllComments() {
     withContext(dispatcher.io()) {
