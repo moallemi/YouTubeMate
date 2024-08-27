@@ -4,7 +4,7 @@ plugins {
   alias(libs.plugins.kotlinMultiplatform)
   alias(libs.plugins.jetbrainsCompose)
   alias(libs.plugins.compose.compiler)
-  id("kotlinx-serialization")
+  alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -31,12 +31,19 @@ kotlin {
       implementation(libs.coil.compose)
       implementation(libs.coil.network.okhttp)
 
+      implementation(libs.ktor.client.core)
+      implementation(libs.ktor.client.logging)
+      implementation(libs.ktor.client.content.negotation)
+      implementation(libs.ktor.client.kotlinx.serialization)
+
       implementation(libs.google.api.client)
       implementation(libs.google.api.services.youtube)
     }
     desktopMain.dependencies {
       implementation(compose.desktop.currentOs)
       implementation(libs.kotlinx.coroutines.swing)
+
+      implementation(libs.ktor.client.okhttp)
     }
   }
 }

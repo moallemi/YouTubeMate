@@ -6,6 +6,15 @@ import androidx.datastore.preferences.core.Preferences
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -49,6 +58,28 @@ class DependencyProvider {
 
   fun providesDispatcher(): DispatcherProvider =
     DefaultDispatcherProvider()
+
+  fun providesHttpClient(): HttpClient =
+    HttpClient(OkHttp) {
+      install(HttpTimeout) {
+        requestTimeoutMillis = 30_000
+        socketTimeoutMillis = 30_000
+        connectTimeoutMillis = 30_000
+      }
+      install(ContentNegotiation) {
+        json(
+          Json {
+            prettyPrint = true
+            isLenient = true
+            ignoreUnknownKeys = true
+          },
+        )
+      }
+      install(Logging) {
+        logger = Logger.SIMPLE
+        level = LogLevel.BODY
+      }
+    }
 
   companion object {
     private const val DATASTORE_FILE_NAME = "youtubemate.preferences_pb"
