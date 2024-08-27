@@ -53,7 +53,6 @@ fun App() {
         }?.entries
           ?.sortedByDescending { it.value.size }
           ?.associate { it.key to it.value }
-          ?: emptyMap()
       }
     }
     val topComments by remember {
@@ -127,10 +126,15 @@ fun App() {
             Text(text = "Change Channel")
           }
         }
+
+        var isLoading by remember { mutableStateOf(false) }
+
         LaunchedEffect(Unit) {
           val cachedVideos: List<Video>
           if (videos?.isEmpty() == true) {
+            isLoading = true
             val videoResult = dependencyContainer.dataRepository.allVideos(channel!!.id)
+            isLoading = false
             if (videoResult is Failure) {
               // Handle error
             }
@@ -140,12 +144,14 @@ fun App() {
           }
 
           if (comments?.isEmpty() == true) {
+            isLoading = true
             val commentsResult = dependencyContainer.dataRepository.allComments(cachedVideos.map { it.id })
             if (commentsResult is Failure) {
               // Handle error
             }
             dependencyContainer.dataRepository.allComments(cachedVideos.map { it.id })
           }
+          isLoading = false
         }
         Row {
           ElevatedCard(
@@ -161,7 +167,8 @@ fun App() {
                 modifier = Modifier.padding(16.dp),
               )
               TopCommentersSection(
-                topCommentAuthors = commentsByAuthor,
+                topCommentAuthors = commentsByAuthor ?: emptyMap(),
+                isLoading = comments == null || isLoading,
               )
             }
           }
@@ -180,6 +187,7 @@ fun App() {
               )
               CommentsSection(
                 items = topComments ?: emptyList(),
+                isLoading = topComments == null || isLoading,
               )
             }
           }
