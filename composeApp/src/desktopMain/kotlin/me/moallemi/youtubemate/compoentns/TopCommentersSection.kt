@@ -2,6 +2,7 @@ package me.moallemi.youtubemate.compoentns
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,7 +53,6 @@ fun TopCommentersSection(
     modifier = modifier
       .fillMaxSize(),
     contentPadding = PaddingValues(16.dp),
-    verticalArrangement = Arrangement.spacedBy(16.dp),
   ) {
     topCommentAuthors.forEach { commenter ->
       item(
@@ -59,7 +60,10 @@ fun TopCommentersSection(
       ) {
         Row(
           modifier = Modifier
-            .animateItemPlacement(),
+            .animateItemPlacement()
+            .clip(CircleShape)
+            .clickable(onClick = { /* TODO */ })
+            .padding(horizontal = 8.dp, vertical = 8.dp),
           horizontalArrangement = Arrangement.spacedBy(8.dp),
           verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -83,9 +87,6 @@ fun TopCommentersSection(
             )
           }
           Spacer(modifier = Modifier.weight(1f))
-          OutlinedButton(onClick = { /* Open commenter"s profile */ }) {
-            Text("View Profile")
-          }
         }
       }
     }

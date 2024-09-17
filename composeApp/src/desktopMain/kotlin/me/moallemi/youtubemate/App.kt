@@ -48,7 +48,9 @@ fun App() {
     val comments by dependencyContainer.dataRepository.observeComments().collectAsState(initial = null)
     val commentsByAuthor by remember {
       derivedStateOf {
-        comments?.groupBy {
+        comments?.filter { comment ->
+          comment.author.name != "@RezaDevs"
+        }?.groupBy {
           it.author
         }?.entries
           ?.sortedByDescending { it.value.size }
@@ -58,8 +60,8 @@ fun App() {
     val topComments by remember {
       derivedStateOf {
         comments?.filter { comment ->
-          comment.author.name != "@RezaDevs" && comment.text.length > 30
-        }
+          comment.author.name != "@RezaDevs"
+        }?.sortedByDescending { it.date }
       }
     }
 
@@ -158,7 +160,7 @@ fun App() {
             modifier = Modifier
               .padding(vertical = 16.dp)
               .padding(start = 16.dp, end = 8.dp)
-              .weight(1f),
+              .weight(0.3f),
           ) {
             Column {
               Text(
@@ -177,7 +179,7 @@ fun App() {
             modifier = Modifier
               .padding(vertical = 16.dp)
               .padding(start = 8.dp, end = 16.dp)
-              .weight(1f),
+              .weight(0.7f),
           ) {
             Column {
               Text(
